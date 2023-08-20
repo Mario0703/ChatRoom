@@ -2,22 +2,31 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, ChangeEvent } from "react";
 
+interface RoomJSON {
+  Room_id: string;
+  Room_Name: string;
+}
+
 export function JoingRoom() {
-  const [RoomName, SetRoomName] = useState<String>("");
+  const [RoomName, SetRoomName] = useState<string>("");
+  const [ShowRooms, SetRooms] = useState<[RoomJSON]>();
+
   const GetRoomName = (event: ChangeEvent<HTMLInputElement>) => {
     const Value = event.target.value;
-    SetRoomName(String(Value));
+    SetRoomName(Value);
   };
 
-  const GetRoomData = async () => {
+  const SendRoomName = async () => {
     try {
-      await axios
-        .get(`http://localhost:5000/GetRoomData/${RoomName}`)
-        .then((response) => {
-          console.log(response);
-        });
-    } catch (err) {}
+      const response = await axios.get(
+        `http://localhost:5000/GetRoomData/${RoomName}`
+      );
+      SetRooms(response.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   return (
     <div>
       <label>
@@ -27,7 +36,20 @@ export function JoingRoom() {
           placeholder="RoomName"
         ></input>
       </label>
-      <button onClick={GetRoomData}>Join Room!</button>
+      <button onClick={SendRoomName}>Search for a room!</button>
+      {ShowRooms && ShowRooms.length > 0 ? (
+        <div>
+          <ul>
+            {ShowRooms.map((room, index) => (
+              <li onClick={() => console.log(room.Room_Name)} key={index}>
+                {room.Room_Name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div>No rooms</div>
+      )}
     </div>
   );
 }

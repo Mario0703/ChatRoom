@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
 
@@ -81,15 +81,17 @@ users_cursor.execute(UserRoomTable)
 
 @app.route("/GetRoomData/<Name>", methods=["POST", "GET"])
 def GetRoom(Name):
-    select_query = f"SELECT Room_Name FROM Room WHERE Room_Name = {Name}"
+    select_query = f"SELECT Room_Name, Room_ID FROM Room WHERE Room_Name = '{Name}'"
     rooms_cursor.execute(select_query)
 
     results = rooms_cursor.fetchall()
+    print(results)
+    if len(results) > 1 or len(results) == 1:
+        room_data = [
+            {"Room_Name": result[0], "Room_id": result[1]} for result in results
+        ]
+        return jsonify(room_data)
 
-    if len(results) > 1:
-        return "Multiple rooms found"
-    elif len(results) == 1:
-        return "Only one room found"
     else:
         return "No rooms found"
 

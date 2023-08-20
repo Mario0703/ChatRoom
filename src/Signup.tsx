@@ -2,7 +2,7 @@
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-// ----------------or----------------
+
 export function SignUp() {
   let [pass, SetPass] = useState<string>("");
   let [Name, SetName] = useState<string>("");

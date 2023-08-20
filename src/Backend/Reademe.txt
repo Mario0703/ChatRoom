@@ -1,2 +1,2 @@
 Chat service thet allows for 2 way communacation with persons
-Wil incluse signup, join rrom, send messages, and react to messages
+Wil include signup, join rrom, send messages, and react to messages
