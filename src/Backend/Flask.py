@@ -7,15 +7,15 @@ CORS(app, supports_credentials=True)
 
 # DB connections
 users_db = mysql.connector.connect(
-    host="localhost", user="root", password="root", database="UserTest4"
+    host="localhost", user="root", password="root", database="UserTest7"
 )
 
 rooms_db = mysql.connector.connect(
-    host="localhost", user="root", password="root", database="RoomDatabase4"
+    host="localhost", user="root", password="root", database="RoomDatabase7"
 )
 
 messages_db = mysql.connector.connect(
-    host="localhost", user="root", password="root", database="MessagesDatabase4"
+    host="localhost", user="root", password="root", database="MessagesDatabase7"
 )
 
 # Cursours
@@ -23,9 +23,10 @@ messages_cursor = messages_db.cursor()
 rooms_cursor = rooms_db.cursor()
 users_cursor = users_db.cursor()
 
-create_rooms_db = "CREATE DATABASE IF NOT EXISTS RoomDatabase4"
-create_messages_db = "CREATE DATABASE IF NOT EXISTS MessagesDatabase4"
-users_cursor_db = "CREATE DATABASE IF NOT EXISTS UserTest4"
+create_rooms_db = "CREATE DATABASE IF NOT EXISTS RoomDatabase7"
+create_messages_db = "CREATE DATABASE IF NOT EXISTS MessagesDatabase7"
+users_cursor_db = "CREATE DATABASE IF NOT EXISTS UserTest7"
+
 
 rooms_cursor.execute(create_rooms_db)
 messages_cursor.execute(create_messages_db)
@@ -37,46 +38,58 @@ users_cursor.execute(users_cursor_db)
 
 RoomTable = """
     CREATE TABLE IF NOT EXISTS Room (
-        Room_ID VARCHAR(40) PRIMARY KEY,
-        Room_Name VARCHAR(50)
+        Room_ID VARCHAR(40),
+        Room_Name VARCHAR(50),
+        PRIMARY KEY(Room_ID)
     )
 """
-
 UsersTable = """
     CREATE TABLE IF NOT EXISTS User (
-        user_id VARCHAR(40) PRIMARY KEY,
+        user_id VARCHAR(40), 
         Name VARCHAR(50),
-        Password VARCHAR(50)
+        Password VARCHAR(50),
+        PRIMARY KEY(user_id)
     )
 """
-
 MessagesTable = """
     CREATE TABLE IF NOT EXISTS Messages (
-        Messages_id VARCHAR(40) PRIMARY KEY,
+        Messages_id VARCHAR(40),
         Messages_string VARCHAR(50),
         Room_ID VARCHAR(50),
         user_id VARCHAR(50),
         Author VARCHAR(50),
+        PRIMARY KEY(Messages_id),
         FOREIGN KEY (user_id) REFERENCES User(user_id)
+
     )
 """
-
+RoomMessageTable = """
+    CREATE TABLE IF NOT EXISTS RoomMessagesJunctionTable (
+        Room_ID VARCHAR(50),
+        Messages_ID VARCHAR(50),
+        PRIMARY KEY (Messages_ID, Room_ID),FOREIGN KEY (Room_ID) REFERENCES Room(Room_ID),
+        FOREIGN KEY (Messages_ID) REFERENCES Messages(Messages_id)
+    )
+"""
 UserRoomTable = """
-    CREATE TABLE IF NOT EXISTS UserRoom (
-        UserRoom_ID INT AUTO_INCREMENT PRIMARY KEY,
-        user_id VARCHAR (50),
-        Room_ID VARCHAR (50),
-        FOREIGN KEY (user_id) REFERENCES User(user_id),
+    CREATE TABLE IF NOT EXISTS UserRoomJunctionTable (
+        user_id VARCHAR(50),
+        Room_ID VARCHAR(50),
+        PRIMARY KEY (user_id, Room_ID),FOREIGN KEY (user_id) REFERENCES User(user_id),
         FOREIGN KEY (Room_ID) REFERENCES Room(Room_ID)
-
     )
 """
-
-
 rooms_cursor.execute(RoomTable)
 users_cursor.execute(UsersTable)
-messages_cursor.execute(RoomTable)
+messages_cursor.execute(MessagesTable)
 users_cursor.execute(UserRoomTable)
+rooms_cursor.execute(RoomMessageTable)
+
+
+users_cursor.execute("SHOW KEYS FROM  UserRoomJunctionTable")
+
+for x in users_cursor:
+    print(x)
 
 
 @app.route("/GetRoomData/<Name>", methods=["POST", "GET"])
@@ -94,6 +107,14 @@ def GetRoom(Name):
 
     else:
         return "No rooms found"
+
+
+@app.route("/AddMessage", methods=["POST"])
+def AddMessageToDB():
+    data = request.get_json()
+    String = data.get("MessagesString")
+    print(String)
+    return "Messeges has been added"
 
 
 @app.route("/CreateRoom", methods=["POST"])

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, ChangeEvent } from "react";
 
@@ -41,8 +41,8 @@ export function JoingRoom() {
         <div>
           <ul>
             {ShowRooms.map((room, index) => (
-              <li onClick={() => console.log(room.Room_Name)} key={index}>
-                {room.Room_Name}
+              <li onClick={() => console.log(index, room.Room_id)} key={index}>
+                <Link to={`/Room/${room.Room_id}`}>{room.Room_Name}</Link>
               </li>
             ))}
           </ul>
