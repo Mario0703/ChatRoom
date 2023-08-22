@@ -6,26 +6,22 @@ import { v4 as uuidv4 } from "uuid";
 export function SignUp() {
   let [pass, SetPass] = useState<string>("");
   let [Name, SetName] = useState<string>("");
-  let [UserID, SetUserID] = useState<string>("");
   const SendFormData = async () => {
     const Generated_id = uuidv4();
-    SetUserID(Generated_id);
     const form: FormData = new FormData();
     form.append("Name", Name);
     form.append("password", pass);
-    form.append("ID", UserID);
+    form.append("ID", Generated_id); // Use Generated_id directly
 
     const formData = {
       Name: Name,
       password: pass,
-      ID: UserID,
+      ID: Generated_id,
     };
-    console.log(pass);
-    await axios
-      .post("http://localhost:5000/AddUser", formData)
-      .then((SendData) => {
-        console.log(SendData);
-      });
+
+    await axios.post("http://localhost:5000/AddUser", formData).then((res) => {
+      console.log(res.data);
+    });
   };
   // Get Form Values
   const Val = (event: ChangeEvent<HTMLInputElement>) => {

@@ -1,7 +1,23 @@
 import "bootstrap/dist/css/bootstrap.css";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function LandingPage() {
+  const [Username, setUsername] = useState();
+
+  const Logout = async () => {
+    axios.get("http://localhost:5000/logout", { withCredentials: true });
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/GetLoginSession", { withCredentials: true })
+      .then((response) => {
+        console.log(response.data);
+      });
+  }, []);
+
   return (
     <>
       <link
@@ -12,6 +28,9 @@ function LandingPage() {
       <header>
         <p>Logo goes here!</p>
         <h1>Chat room</h1>
+        <span>Welcome user</span>
+        <br></br>
+        <span>Click me to logut</span>
       </header>
       <section>
         <div>
