@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 
 export function CreateRoom() {
   const [Roomname, SetRoomName] = useState<String>("");
-  const [RoomID, SetRoomID] = useState<String>("");
   const Val = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     SetRoomName(String(value));
@@ -12,11 +11,10 @@ export function CreateRoom() {
 
   const SendRoomData = async () => {
     const Generated_id = uuidv4();
-    SetRoomID(Generated_id);
     try {
       await axios.post("http://localhost:5000/CreateRoom", {
         Room: Roomname,
-        Room_ID: RoomID,
+        Room_ID: Generated_id,
       });
       console.log("Posted!", Roomname);
     } catch (err) {

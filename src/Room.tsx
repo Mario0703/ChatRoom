@@ -17,6 +17,8 @@ export function Room() {
       });
   };
 
+  const UserList = () => {};
+
   const MessagesBOX = () => {
     return (
       <div>
@@ -30,9 +32,25 @@ export function Room() {
   return (
     <div>
       <p>Welcome to the chat</p>
-      <input onChange={Values} placeholder="Whats on your heart?"></input>
-      <button onClick={postMessage}>Send Message</button>
-      <MessagesBOX></MessagesBOX>
+      <button>Search for a user</button>
+      <label>
+        <input></input>
+      </label>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <label>
+            <input onChange={Values} placeholder="Whats on your heart?"></input>
+          </label>
+          <button onClick={postMessage}>Send Message</button>
+          <MessagesBOX></MessagesBOX>
+        </div>
+      </div>
     </div>
   );
 }
