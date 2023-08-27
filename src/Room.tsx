@@ -1,27 +1,33 @@
 import axios from "axios";
-import { useState, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useParams } from "react-router-dom";
 
 export function Room() {
   let [UserName, SetUserName] = useState<string>("");
   let [Value, Setvalue] = useState<string>("");
+  let [RoomID, SetRoomID] = useState<string>();
+  let { ChatRoom_id } = useParams<string>();
 
-  let { Room_ID } = useParams<{ Room_ID: string }>();
   const Values = (event: ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value;
     Setvalue(value);
     console.log(Value);
   };
 
-  const postMessage = async () => {
-    console.log(Room_ID);
+  useEffect(() => {
+    SetRoomID(ChatRoom_id);
+    console.log(ChatRoom_id);
+  }, []);
 
+  const postMessage = async () => {
     try {
+      console.log(RoomID);
       const response = await axios.get(
         "http://localhost:5000/GetLoginSession",
         { withCredentials: true }
       );
+
       const userName = response.data.Username;
 
       // Generate a unique message ID
@@ -34,6 +40,7 @@ export function Room() {
         id: messageId,
         content: Value,
         author: userName, // Use the fetched user name
+        RoomID: RoomID,
       };
 
       // Update state with user name

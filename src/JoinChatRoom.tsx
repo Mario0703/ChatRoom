@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, ChangeEvent } from "react";
+import { useParams } from "react-router-dom";
 
 interface RoomJSON {
   Room_id: string;
@@ -8,6 +9,7 @@ interface RoomJSON {
 }
 
 export function JoingRoom() {
+  const { URL } = useParams();
   const [RoomName, SetRoomName] = useState<string>("");
   const [ShowRooms, SetRooms] = useState<[RoomJSON]>();
 
@@ -18,6 +20,7 @@ export function JoingRoom() {
 
   const SendRoomName = async () => {
     try {
+      console.log(URL);
       const response = await axios.get(
         `http://localhost:5000/GetRoomData/${RoomName}`
       );

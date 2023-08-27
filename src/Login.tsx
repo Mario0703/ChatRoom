@@ -26,12 +26,15 @@ export function Login() {
       Username: Submitted_Username,
       password: Submitted_password,
     };
-
-    await axios
-      .post("http://localhost:5000/CheckLogin", formData, {
-        withCredentials: true,
-      })
-      .then((response) => console.log(response));
+    try {
+      await axios
+        .post("http://localhost:5000/CheckLogin", formData, {
+          withCredentials: true,
+        })
+        .then((response) => console.log(response));
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (

@@ -67,7 +67,7 @@ def AddMessageToDB():
     String = data.get("id")
     content = data.get("content")
     author = data.get("author")
-    RoomID = data.get("Room")
+    RoomID = data.get("RoomID")
     print(RoomID)
     query = "INSERT INTO Messages (Messages_id,Messages_string,Room_ID,user_id,Author)"
     return "Messeges has been added"

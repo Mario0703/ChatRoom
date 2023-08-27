@@ -8,21 +8,27 @@ export function SignUp() {
   let [Name, SetName] = useState<string>("");
 
   const SendFormData = async () => {
-    const Generated_id = uuidv4();
-    const form: FormData = new FormData();
-    form.append("Name", Name);
-    form.append("password", pass);
-    form.append("ID", Generated_id); // Use Generated_id directly
+    try {
+      const Generated_id = uuidv4();
+      const form: FormData = new FormData();
+      form.append("Name", Name);
+      form.append("password", pass);
+      form.append("ID", Generated_id); // Use Generated_id directly
 
-    const formData = {
-      Name: Name,
-      password: pass,
-      ID: Generated_id,
-    };
+      const formData = {
+        Name: Name,
+        password: pass,
+        ID: Generated_id,
+      };
 
-    await axios.post("http://localhost:5000/AddUser", formData).then((res) => {
-      console.log(res.data);
-    });
+      await axios
+        .post("http://localhost:5000/AddUser", formData)
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (err) {
+      alert(err);
+    }
   };
   // Get Form Values
   const Val = (event: ChangeEvent<HTMLInputElement>) => {
